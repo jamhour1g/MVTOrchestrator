@@ -12,7 +12,7 @@ import java.util.regex.Pattern
  * The pattern expects three space-separated integer values for process ID, size, and time.
  */
 val linePattern: Pattern =
-    Pattern.compile("(?<processId>\\d+)\\s+(?<processSize>\\d+)\\s+(?<processTime>\\d+)")
+    Pattern.compile("(?<processId>\\d+)\\s+(?<processSize>\\d+)\\s+(?<processTime>\\d+)\\s*")
 
 /**
  * Logger instance for the FileReader.
