@@ -11,7 +11,7 @@ import java.util.regex.Pattern
  * Regular expression pattern to match process information in the input file.
  * The pattern expects three space-separated integer values for process ID, size, and time.
  */
-val linePatten: Pattern =
+val linePattern: Pattern =
     Pattern.compile("(?<processId>\\d+)\\s+(?<processSize>\\d+)\\s+(?<processTime>\\d+)")
 
 /**
@@ -28,7 +28,7 @@ private val logger = Logger.getLogger("FileReader")
 suspend fun readFile(filePath: Path): List<Process> = coroutineScope {
     runCatching {
         Files.newBufferedReader(filePath).useLines { seq ->
-            return@runCatching seq.map { linePatten.matcher(it) }
+            return@runCatching seq.map { linePattern.matcher(it) }
                 .filter { it.matches() }
                 .map {
                     val processId = it.group("processId")!!.toInt()
