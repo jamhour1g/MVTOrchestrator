@@ -1,0 +1,7 @@
+Process-no process-size time-in-memory
+1 521 10
+2 100 5
+3 240 16
+4 300 22
+5 512 3
+6 375 12
