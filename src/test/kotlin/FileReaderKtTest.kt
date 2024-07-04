@@ -15,20 +15,22 @@ class FileReaderKtTest {
     fun linePatternMatchesValidLines() {
         val correctlyFormattedLines = listOf(
             "1 1024 5000",
-            "2 2048 10000",
-            "3 4096 15000",
-            "4 8192 20000",
-            "5 16384 25000",
+            "2A 2048 10000",
+            "3abs 4096 15000",
+            "OS 16384 25000", // note this should not be present in the file
             "6  1024  5000 ",
             "7  2048  10000  ",
             "8  4096  15000",
             "9  8192  20000",
-            "10  16384  25000"
+            "10  16384  25000",
+            "yazan  16384  25000",
+            "jamhour  16384  25000"
         )
 
         assertTrue(
             correctlyFormattedLines.all { linePattern.matcher(it).matches() }
-        ) { "Line should match pattern: $linePattern" }
+        )
+        { "Line should match pattern: $linePattern" }
 
     }
 
@@ -36,15 +38,16 @@ class FileReaderKtTest {
     @DisplayName("Verify line pattern rejects invalid lines")
     fun linePatternRejectsInvalidLines() {
         val incorrectlyFormattedLines = listOf(
-            "1.1 1024 5000",
             "2 2048.1 10000",
             "3 4096 15000.1",
-            "4A 8192 20000",
+            " Jamhour 4096 15000.1",
+            "4-12 8192 20000",
             "5 16384A 25000A",
             "67. 1024 5000",
             "7-2048-10000",
             "8_4096_15000",
             "9+8192+20000",
+            " 254 123",
             "",
             " ",
             "101638425000"
@@ -64,20 +67,20 @@ class FileReaderKtTest {
 
         val processes = readFile(Path.of(resource.toURI()))
         val expectedResult = listOf(
-            Process(1, 521, 10),
-            Process(2, 100, 5),
-            Process(3, 240, 16),
-            Process(4, 300, 22),
-            Process(5, 700, 3),
-            Process(6, 890, 30),
-            Process(7, 800, 10),
-            Process(8, 900, 17),
-            Process(9, 1200, 13),
-            Process(10, 1000, 12),
-            Process(11, 650, 9)
+            Process("1", 521, 10),
+            Process("2", 100, 5),
+            Process("3", 240, 16),
+            Process("4", 300, 22),
+            Process("5", 700, 3),
+            Process("6", 890, 30),
+            Process("7", 800, 10),
+            Process("8", 900, 17),
+            Process("9", 1200, 13),
+            Process("10", 1000, 12),
+            Process("11", 650, 9)
         )
 
-        assertTrue(processes == expectedResult) { "Processes should match expected result" }
+        assertTrue(processes == expectedResult) { "Processes should match expected result $expectedResult" }
     }
 
     @Test
@@ -89,6 +92,6 @@ class FileReaderKtTest {
 
         val processes = readFile(Path.of(resource.toURI()))
 
-        assertTrue(processes.isEmpty()) { "Processes should be an empty list" }
+        assertTrue(processes.isEmpty()) { "Processes should be an empty list instead of $processes" }
     }
 }
