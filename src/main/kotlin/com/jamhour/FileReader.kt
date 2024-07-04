@@ -12,7 +12,7 @@ import java.util.regex.Pattern
  * The pattern expects three space-separated integer values for process ID, size, and time.
  */
 val linePattern: Pattern =
-    Pattern.compile("(?<processId>\\d+)\\s+(?<processSize>\\d+)\\s+(?<processTime>\\d+)\\s*")
+    Pattern.compile("(?<processId>\\w+)\\s+(?<processSize>\\d+)\\s+(?<processTime>\\d+)\\s*")
 
 /**
  * Logger instance for the FileReader.
@@ -31,7 +31,7 @@ suspend fun readFile(filePath: Path): List<Process> = coroutineScope {
             return@runCatching seq.map { linePattern.matcher(it) }
                 .filter { it.matches() }
                 .map {
-                    val processId = it.group("processId")!!.toInt()
+                    val processId = it.group("processId")!!
                     val processSize = it.group("processSize")!!.toInt()
                     val processTime = it.group("processTime")!!.toInt()
                     Process(processId, processSize, processTime).also { logger.fine { "Created process: $it" } }

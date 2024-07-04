@@ -1,5 +1,10 @@
 package com.jamhour
 
+
+val processComparator = Comparator.comparingInt<Process>(Process::time)
+    .thenComparing(Process::id)
+    .thenComparing(Process::size)
+
 /**
  * Represents a computational process with its characteristics.
  *
@@ -15,4 +20,10 @@ package com.jamhour
  * val process = Process(1, 1024, 5000)
  * println("Process ${process.id} requires ${process.size} MB and takes ${process.time} ms to execute.")
  */
-data class Process(val id: Int, val size: Int, val time: Int)
+
+data class Process(val id: String, val size: Int, val time: Int) : Comparable<Process> {
+
+    override fun compareTo(other: Process): Int {
+        return processComparator.compare(this, other)
+    }
+}
