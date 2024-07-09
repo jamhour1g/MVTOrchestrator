@@ -1,4 +1,4 @@
-package com.jamhour
+package com.jamhour.model
 
 
 val OS_PCB = PCB(OS_PROCESS, 0)

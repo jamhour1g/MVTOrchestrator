@@ -1,4 +1,4 @@
-package com.jamhour
+package com.jamhour.model
 
 
 val PROCESS_COMPARATOR = Comparator.comparingInt<Process>(Process::time)

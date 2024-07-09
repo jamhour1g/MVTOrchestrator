@@ -1,5 +1,6 @@
 package com.jamhour
 
+import com.jamhour.model.Process
 import kotlinx.coroutines.coroutineScope
 import java.nio.file.Files
 import java.nio.file.Path

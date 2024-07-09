@@ -1,5 +1,9 @@
 package com.jamhour
 
+import com.jamhour.model.Hole
+import com.jamhour.model.OS_PCB
+import com.jamhour.model.PCB
+import com.jamhour.model.Process
 import java.util.NavigableSet
 import java.util.PriorityQueue
 import java.util.Queue

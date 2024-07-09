@@ -1,8 +1,8 @@
-import com.jamhour.OS_PCB
-import com.jamhour.OS_PROCESS
-import com.jamhour.PCB
-import com.jamhour.Process
 import com.jamhour.ReadyQueue
+import com.jamhour.model.OS_PCB
+import com.jamhour.model.OS_PROCESS
+import com.jamhour.model.PCB
+import com.jamhour.model.Process
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

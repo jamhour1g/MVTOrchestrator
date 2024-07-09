@@ -1,4 +1,4 @@
-package com.jamhour
+package com.jamhour.model
 
 /**
  * Represents a hole or free space in memory.
