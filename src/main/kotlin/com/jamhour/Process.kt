@@ -1,9 +1,11 @@
 package com.jamhour
 
 
-val processComparator = Comparator.comparingInt<Process>(Process::time)
+val PROCESS_COMPARATOR = Comparator.comparingInt<Process>(Process::time)
     .thenComparing(Process::id)
     .thenComparing(Process::size)
+
+val OS_PROCESS = Process("OS", 512, Integer.MAX_VALUE)
 
 /**
  * Represents a computational process with its characteristics.
@@ -24,6 +26,7 @@ val processComparator = Comparator.comparingInt<Process>(Process::time)
 data class Process(val id: String, val size: Int, val time: Int) : Comparable<Process> {
 
     override fun compareTo(other: Process): Int {
-        return processComparator.compare(this, other)
+        return PROCESS_COMPARATOR.compare(this, other)
     }
+
 }
