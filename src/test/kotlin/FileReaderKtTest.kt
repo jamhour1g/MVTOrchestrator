@@ -2,8 +2,7 @@ import com.jamhour.Process
 import com.jamhour.linePattern
 import com.jamhour.readFile
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import java.nio.file.Path
 import kotlin.test.Test
@@ -11,8 +10,8 @@ import kotlin.test.Test
 class FileReaderKtTest {
 
     @Test
-    @DisplayName("Verify line pattern correctly matches valid lines")
-    fun linePatternMatchesValidLines() {
+    @DisplayName("linePattern matches correctly formatted lines")
+    fun testLinePatternMatchesValidLines() {
         val correctlyFormattedLines = listOf(
             "1 1024 5000",
             "2A 2048 10000",
@@ -27,16 +26,14 @@ class FileReaderKtTest {
             "jamhour  16384  25000"
         )
 
-        assertTrue(
-            correctlyFormattedLines.all { linePattern.matcher(it).matches() }
-        )
-        { "Line should match pattern: $linePattern" }
-
+        correctlyFormattedLines.forEach {
+            assertTrue(linePattern.matcher(it).matches()) { "Line '$it' should match pattern: $linePattern" }
+        }
     }
 
     @Test
-    @DisplayName("Verify line pattern rejects invalid lines")
-    fun linePatternRejectsInvalidLines() {
+    @DisplayName("linePattern rejects incorrectly formatted lines")
+    fun testLinePatternRejectsInvalidLines() {
         val incorrectlyFormattedLines = listOf(
             "2 2048.1 10000",
             "3 4096 15000.1",
@@ -53,17 +50,17 @@ class FileReaderKtTest {
             "101638425000"
         )
 
-        assertFalse(
-            incorrectlyFormattedLines.all { linePattern.matcher(it).matches() }
-        ) { "Line should not match pattern: $linePattern" }
+        incorrectlyFormattedLines.forEach {
+            assertFalse(linePattern.matcher(it).matches()) { "Line '$it' should not match pattern: $linePattern" }
+        }
     }
 
     @Test
-    @DisplayName("Verify readFile correctly parses a correctly formatted file")
-    fun readFileCorrectlyParsesFormattedFile() = runTest {
+    @DisplayName("readFile correctly parses a correctly formatted file")
+    fun testReadFileCorrectlyParsesFormattedFile() = runTest {
         val fileName = "/jobs_correct_format.txt"
         val resource = javaClass.getResource(fileName)
-            ?: org.junit.jupiter.api.fail { "Resource $fileName not found" }
+            ?: fail("Resource $fileName not found")
 
         val processes = readFile(Path.of(resource.toURI()))
         val expectedResult = listOf(
@@ -80,15 +77,15 @@ class FileReaderKtTest {
             Process("11", 650, 9)
         )
 
-        assertTrue(processes == expectedResult) { "Processes should match expected result $expectedResult" }
+        assertEquals(expectedResult, processes) { "Processes should match expected result $expectedResult" }
     }
 
     @Test
-    @DisplayName("Verify readFile returns empty list for incorrectly formatted file")
-    fun readFileReturnsEmptyListForIncorrectlyFormattedFile() = runTest {
+    @DisplayName("readFile returns empty list for incorrectly formatted file")
+    fun testReadFileReturnsEmptyListForIncorrectlyFormattedFile() = runTest {
         val fileName = "/jobs_wrong_format.txt"
         val resource = javaClass.getResource(fileName)
-            ?: org.junit.jupiter.api.fail { "Resource $fileName not found" }
+            ?: fail { "Resource $fileName not found" }
 
         val processes = readFile(Path.of(resource.toURI()))
 
