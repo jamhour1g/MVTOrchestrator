@@ -22,7 +22,7 @@ val OS_PROCESS = Process("OS", 512, Integer.MAX_VALUE)
  * val process = Process(1, 1024, 5000)
  * println("Process ${process.id} requires ${process.size} MB and takes ${process.time} ms to execute.")
  */
-
+@JvmRecord
 data class Process(val id: String, val size: Int, val time: Int) : Comparable<Process> {
 
     override fun compareTo(other: Process): Int {

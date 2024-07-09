@@ -20,6 +20,7 @@ val OS_PCB = PCB(OS_PROCESS, 0)
  * with the process information.
  *
  */
+@JvmRecord
 data class PCB(val process: Process, val base: Int, val limit: Int = base + process.size) : Comparable<PCB> {
 
     override fun compareTo(other: PCB): Int {
