@@ -1,6 +1,8 @@
 package com.jamhour
 
 
+val OS_PCB = PCB(OS_PROCESS, 0)
+
 /**
  * Represents a Process Control Block (PCB), which contains information about a process
  * and its memory allocation.
@@ -18,7 +20,7 @@ package com.jamhour
  * with the process information.
  *
  */
-data class PCB(val base: Int, val limit: Int, val process: Process) : Comparable<PCB> {
+data class PCB(val process: Process, val base: Int, val limit: Int = base + process.size) : Comparable<PCB> {
 
     override fun compareTo(other: PCB): Int {
         return this.process.compareTo(other.process)
