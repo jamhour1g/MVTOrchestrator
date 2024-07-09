@@ -9,8 +9,18 @@ package com.jamhour
  * @param base An integer representing the starting address of the hole.
  * @param limit An integer representing the ending address of the hole.
  */
-data class Hole(val base: Int, val limit: Int) {
+@JvmRecord
+data class Hole(val base: Int, val limit: Int) : Comparable<Hole> {
+
+    private constructor(size: Int) : this(0, size)
 
     fun size() = limit - base
+    fun canAccommodate(process: Process) = size() >= process.size
+    fun isExactFit(process: Process) = size() == process.size
+    fun getRemainingSpaceAfter(process: Process) = size() - process.size
+    override fun compareTo(other: Hole) = size().compareTo(other.size())
 
+    companion object {
+        fun ofSize(process: Process) = Hole(process.size)
+    }
 }
