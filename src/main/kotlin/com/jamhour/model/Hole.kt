@@ -15,7 +15,6 @@ data class Hole(val base: Int, val limit: Int) : Comparable<Hole> {
     private constructor(size: Int) : this(0, size)
 
     fun size() = limit - base
-    fun canAccommodate(process: Process) = size() >= process.size
     fun isExactFit(process: Process) = size() == process.size
     fun getRemainingSpaceAfter(process: Process) = size() - process.size
     override fun compareTo(other: Hole) = size().compareTo(other.size())
