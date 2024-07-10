@@ -16,10 +16,12 @@ class ReadyQueue(
     private val recentProcesses: SequencedSet<PCB> = LinkedHashSet(),
     private val availableHoles: NavigableSet<Hole> = TreeSet(),
     val operatingSystemPcb: PCB = OS_PCB,
-    val maximumSize: Int = 2048
+    val maximumSize: Int = 2048,
+    val numberOfHolesShouldNotExceed: Int = 3
 ) : Iterable<PCB> {
 
     private var currentSize = 0
+    private var numOfCompactions = 0
 
     init {
         operatingSystemPcb.addToQueue()
@@ -30,6 +32,24 @@ class ReadyQueue(
     private fun Process.hasSufficientSpace() = maximumSize >= this.size + currentSize
     private fun Hole.removeFromHoles() = availableHoles.remove(this)
     private fun Hole.addToAvailableHoles() = availableHoles.add(this)
+    private fun PCB.remove(): PCB {
+        assert(this != OS_PCB) { "OS PCB cannot be removed" }
+        recentProcesses.remove(this)
+        Hole(base, limit).addToAvailableHoles()
+        currentSize -= process.size
+        return this
+    }
+
+    private fun MutableCollection<PCB>.refill(collection: Collection<PCB>) {
+        clear()
+        addAll(collection)
+    }
+
+    private fun PCB.shiftLeft(hole: Hole) = copy(
+        base = base - hole.size(),
+        limit = limit - hole.size()
+    )
+
 
     private fun PCB.updateCurrentSize() {
         currentSize += process.size
@@ -41,12 +61,41 @@ class ReadyQueue(
         return recentProcesses.add(this)
     }
 
+    private fun repositionPcbsForHole(hole: Hole, fromCollection: Collection<PCB>) = buildList {
+        add(operatingSystemPcb)
+        for (item in fromCollection) {
+            if (item == operatingSystemPcb) {
+                continue
+            }
+            if (hole.base > item.base) {
+                add(item)
+                continue
+            }
+            add(item.shiftLeft(hole))
+        }
+    }
+
+    private fun compactHoles() {
+
+        availableHoles.forEach {
+            readyProcesses.refill(repositionPcbsForHole(it, readyProcesses))
+            recentProcesses.refill(repositionPcbsForHole(it, recentProcesses))
+        }
+
+        availableHoles.clear()
+        Hole(recentProcesses.last.limit, remainingSize()).addToAvailableHoles()
+
+        numOfCompactions++
+    }
+
+
     // PUBLIC FUNCTIONS
     fun remainingSize() = maximumSize - currentSize
     fun size() = readyProcesses.size
-    fun holesSize() = availableHoles.size   // TODO : Test this
+    fun holesSize() = availableHoles.size
+    fun numberOfCompactions() = numOfCompactions
     fun isEmpty() = size() == 1 && readyProcesses.contains(operatingSystemPcb)
-    fun addAll(collection: Collection<Process>): Boolean = collection.map { add(it) }.all { it }
+    fun addAll(collection: Collection<Process>) = collection.all { add(it) }
 
     fun add(process: Process): Boolean {
 
@@ -54,12 +103,12 @@ class ReadyQueue(
             return true
         }
 
-        if (isEmpty() && process.hasSufficientSpace()) {
-            return PCB(process, operatingSystemPcb.limit).addToQueue()
+        if (!process.hasSufficientSpace() || hasReachedMaxSize()) {
+            return false
         }
 
-        if (hasReachedMaxSize() || !process.hasSufficientSpace()) {
-            return false
+        if (isEmpty()) {
+            return PCB(process, operatingSystemPcb.limit).addToQueue()
         }
 
         val suitableHole = availableHoles.ceiling(Hole.ofSize(process))
@@ -86,9 +135,41 @@ class ReadyQueue(
     }
 
 
-    override fun iterator(): Iterator<PCB> = readyProcesses.iterator()
-    fun recentProcessesIterator(): Iterable<PCB> = recentProcesses
-    fun availableHolesIterator(): Iterable<Hole> = availableHoles  // TODO : Test this
+    fun remove(): PCB? {
 
+        if (isEmpty()) {
+            return null
+        }
+
+        val removed = readyProcesses.poll().remove()
+
+        if (holesSize() > numberOfHolesShouldNotExceed) {
+            compactHoles()
+        }
+
+        return removed
+    }
+
+    fun removeAll(): Boolean {
+        var removed = false
+        while (!isEmpty()) {
+            remove().let { removed = true }
+        }
+        return removed
+    }
+
+    fun clear() {
+        readyProcesses.clear()
+        recentProcesses.clear()
+        availableHoles.clear()
+        operatingSystemPcb.addToQueue()
+        currentSize = 0
+        numOfCompactions = 0
+    }
+
+    override fun toString() = readyProcesses.toString()
+    override fun iterator() = readyProcesses.iterator()
+    fun recentProcesses() = recentProcesses.toList()
+    fun availableHoles() = availableHoles.toList()
 
 }
