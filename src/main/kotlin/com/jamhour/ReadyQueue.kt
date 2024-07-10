@@ -50,7 +50,6 @@ class ReadyQueue(
         limit = limit - hole.size()
     )
 
-
     private fun PCB.updateCurrentSize() {
         currentSize += process.size
     }
@@ -87,7 +86,6 @@ class ReadyQueue(
 
         numOfCompactions++
     }
-
 
     // PUBLIC FUNCTIONS
     fun remainingSize() = maximumSize - currentSize
@@ -133,7 +131,6 @@ class ReadyQueue(
         return true
 
     }
-
 
     fun remove(): PCB? {
 
