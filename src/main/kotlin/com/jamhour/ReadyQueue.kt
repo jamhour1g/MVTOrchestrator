@@ -143,19 +143,15 @@ class ReadyQueue(
 
     }
 
-    fun remove(): PCB? {
-
-        if (isEmpty()) {
-            return null
+    fun remove() = when {
+        isEmpty() -> null
+        else -> {
+            val removed = readyProcesses.poll().remove()
+            if (holesSize() > numberOfHolesShouldNotExceed) {
+                compactHoles()
+            }
+            removed
         }
-
-        val removed = readyProcesses.poll().remove()
-
-        if (holesSize() > numberOfHolesShouldNotExceed) {
-            compactHoles()
-        }
-
-        return removed
     }
 
     fun removeAll(): Boolean {
