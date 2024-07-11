@@ -66,14 +66,11 @@ class ReadyQueue(
     private fun repositionPcbsForHole(hole: Hole, fromCollection: Collection<PCB>) = buildList {
         add(operatingSystemPcb)
         for (item in fromCollection) {
-            if (item == operatingSystemPcb) {
-                continue
+            when {
+                item == operatingSystemPcb -> continue
+                hole.base > item.base -> add(item)
+                else -> add(item.shiftLeft(hole))
             }
-            if (hole.base > item.base) {
-                add(item)
-                continue
-            }
-            add(item.shiftLeft(hole))
         }
     }
 
@@ -94,25 +91,22 @@ class ReadyQueue(
 
     private fun handleSuitableHole(process: Process): Boolean {
         val suitableHole = availableHoles.ceiling(Hole.ofSize(process))
+        return when {
+            suitableHole == null -> PCB(process, recentProcesses.last.limit).addToQueue()
 
-        if (suitableHole == null) {
-            return PCB(process, recentProcesses.last.limit).addToQueue()
+            suitableHole.isExactFit(process) -> {
+                suitableHole.removeFromHoles()
+                PCB(process, suitableHole.base).addToQueue()
+            }
+
+            else -> {
+                suitableHole.removeFromHoles()
+                val leftoverSpace = suitableHole.getRemainingSpaceAfter(process)
+                val pcb = PCB(process, suitableHole.base).also { it.addToQueue() }
+                Hole(pcb.limit, pcb.limit + leftoverSpace).also { it.addToAvailableHoles() }
+                true
+            }
         }
-
-        suitableHole.removeFromHoles()
-
-        if (suitableHole.isExactFit(process)) {
-            val perfectlyFitHole = suitableHole
-            return PCB(process, perfectlyFitHole.base).addToQueue()
-        }
-
-        val largerHole = suitableHole
-        val leftoverSpace = largerHole.getRemainingSpaceAfter(process)
-
-        val pcb = PCB(process, largerHole.base).also { it.addToQueue() }
-        Hole(pcb.limit, pcb.limit + leftoverSpace).also { it.addToAvailableHoles() }
-
-        return true
     }
 
     // PUBLIC FUNCTIONS
