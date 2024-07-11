@@ -1,4 +1,5 @@
 import com.jamhour.ReadyQueue
+import com.jamhour.model.Hole
 import com.jamhour.model.OS_PCB
 import com.jamhour.model.OS_PROCESS
 import com.jamhour.model.PCB
@@ -6,7 +7,10 @@ import com.jamhour.model.Process
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalStateException
 import java.util.PriorityQueue
+import java.util.TreeSet
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -265,11 +269,34 @@ class ReadyQueueKtTest {
     }
 
     @Test
+    @DisplayName("ReadyQueue toString should not be the default toString")
     fun testToString() {
         assertNotEquals(
             readyQueue.toString(),
             "${readyQueue.javaClass.name}@${Integer.toHexString(readyQueue.hashCode())}"
         )
+    }
+
+    @Test
+    @DisplayName("ReadyQueue should throw if queues have data in them")
+    fun testConstructorThrowsIfQueuesHaveDataInThem() {
+        val throwingQueue = PriorityQueue<PCB>().apply { addAll(expectedResults) }
+        val throwingStack = LinkedHashSet<PCB>().apply { addAll(expectedResults) }
+        val throwingAvailableHoles = TreeSet<Hole>().apply { add(Hole.ofSize(OS_PROCESS)) }
+
+        assertThrows<IllegalStateException> { ReadyQueue(throwingQueue, throwingStack, throwingAvailableHoles) }
+        assertThrows<IllegalStateException> { ReadyQueue(throwingQueue) }
+        assertThrows<IllegalStateException> { ReadyQueue(recentProcesses = throwingStack) }
+        assertThrows<IllegalStateException> { ReadyQueue(availableHoles = throwingAvailableHoles) }
+    }
+
+    @Test
+    @DisplayName("ReadyQueue should not throw if queues are empty")
+    fun testConstructorDoesNotThrowIfQueueIsEmpty() {
+        assertDoesNotThrow { ReadyQueue(PriorityQueue<PCB>(), LinkedHashSet<PCB>(), TreeSet<Hole>()) }
+        assertDoesNotThrow { ReadyQueue(PriorityQueue<PCB>()) }
+        assertDoesNotThrow { ReadyQueue(recentProcesses = LinkedHashSet<PCB>()) }
+        assertDoesNotThrow { ReadyQueue(availableHoles = TreeSet<Hole>()) }
     }
 
 
