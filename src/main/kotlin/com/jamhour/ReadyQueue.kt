@@ -114,13 +114,7 @@ class ReadyQueue(
     fun size() = readyProcesses.size
     fun holesSize() = availableHoles.size
     fun isEmpty() = size() == 1 && readyProcesses.contains(operatingSystemPcb)
-    fun addAll(collection: Collection<Process>, fillRemainingSpace: Boolean = true) {
-        val allAdded = collection.all { add(it) }
-
-        if (fillRemainingSpace && allAdded && !hasReachedMaxSize()) {
-            fillRemainingSpace()
-        }
-    }
+    fun addAll(elementsToAdd: Collection<Process>) = elementsToAdd.all { add(it) }
 
     fun add(process: Process) = when {
         process == OS_PCB.process -> true
@@ -161,5 +155,15 @@ class ReadyQueue(
     override fun iterator() = readyProcesses.iterator()
     fun recentProcesses() = recentProcesses.toList()
     fun availableHoles() = availableHoles.toList()
+
+    companion object {
+        fun build(shouldAddHole: Boolean = true, builderAction: ReadyQueue.() -> Unit): ReadyQueue {
+            val readQueue = ReadyQueue().apply(builderAction)
+            if (shouldAddHole) {
+                readQueue.fillRemainingSpace()
+            }
+            return readQueue
+        }
+    }
 
 }
