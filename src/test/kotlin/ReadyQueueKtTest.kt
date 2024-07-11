@@ -365,4 +365,34 @@ class ReadyQueueKtTest {
         }
     }
 
+    @Test
+    @DisplayName("Ensure ReadyQueue currentSize property returns the correct value")
+    fun testCurrentSize() {
+        readyQueue.apply {
+            addAll(processes)
+            assertEquals(
+                readyQueue.maximumSize,
+                currentSize
+            ) { "ReadyQueue's current size should equal its maximum size when all processes are added $processes" }
+        }
+    }
+
+    @Test
+    @DisplayName("Ensure ReadyQueue currentSize property updates when a process is removed")
+    fun testCurrentSizeUpdatesWhenRemovingAProcess() {
+        readyQueue.apply {
+            val process = Process("1", 521, 10)
+            add(process)
+            assertEquals(
+                process.size + OS_PROCESS.size,
+                currentSize
+            ) { "ReadyQueue's current size should be the sum of its ${process.size} and the OS process size ${OS_PROCESS.size}" }
+            remove()
+            assertEquals(
+                OS_PROCESS.size,
+                currentSize
+            ) { "ReadyQueue's current size should be the OS process size ${OS_PROCESS.size} after removing the process $process" }
+        }
+    }
+
 }
