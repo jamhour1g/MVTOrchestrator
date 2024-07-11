@@ -20,10 +20,13 @@ class ReadyQueue(
     val numberOfHolesShouldNotExceed: Int = 3
 ) : Iterable<PCB> {
 
-    private var currentSize = 0
-    private var numOfCompactions = 0
+    var currentSize = 0; private set
+    var numOfCompactions = 0; private set
 
     init {
+        if (readyProcesses.isNotEmpty() || recentProcesses.isNotEmpty() || availableHoles.isNotEmpty()) {
+            error("ReadyQueue should be empty upon creation")
+        }
         operatingSystemPcb.addToQueue()
     }
 
@@ -87,13 +90,21 @@ class ReadyQueue(
         numOfCompactions++
     }
 
+    private fun fillRemainingSpace() = Hole(recentProcesses.last.limit, remainingSize()).addToAvailableHoles()
+
     // PUBLIC FUNCTIONS
     fun remainingSize() = maximumSize - currentSize
     fun size() = readyProcesses.size
     fun holesSize() = availableHoles.size
-    fun numberOfCompactions() = numOfCompactions
     fun isEmpty() = size() == 1 && readyProcesses.contains(operatingSystemPcb)
-    fun addAll(collection: Collection<Process>) = collection.all { add(it) }
+    fun addAll(collection: Collection<Process>, fillRemainingSpace: Boolean = true) {
+        val allAdded = collection.all { add(it) }
+
+        if (fillRemainingSpace && allAdded && !hasReachedMaxSize()) {
+            fillRemainingSpace()
+        }
+    }
+
 
     fun add(process: Process): Boolean {
 

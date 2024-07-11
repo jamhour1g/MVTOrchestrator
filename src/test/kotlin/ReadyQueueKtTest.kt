@@ -220,7 +220,7 @@ class ReadyQueueKtTest {
         readyQueue.apply {
             addAll(processes)
             removeAll()
-            assertEquals(expectedNumberOfCompactions, numberOfCompactions())
+            assertEquals(expectedNumberOfCompactions, numOfCompactions)
             assertEquals(expectedNumberOfHoleWhenAllRemoved, holesSize())
         }
     }
@@ -260,7 +260,7 @@ class ReadyQueueKtTest {
             assertEquals(readyQueue.availableHoles(), emptyList())
             assertEquals(readyQueue.holesSize(), 0)
             assertEquals(readyQueue.remainingSize(), readyQueue.maximumSize)
-            assertEquals(readyQueue.numberOfCompactions(), 0)
+            assertEquals(readyQueue.numOfCompactions, 0)
         }
     }
 
