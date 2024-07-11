@@ -92,34 +92,7 @@ class ReadyQueue(
 
     private fun fillRemainingSpace() = Hole(recentProcesses.last.limit, remainingSize()).addToAvailableHoles()
 
-    // PUBLIC FUNCTIONS
-    fun remainingSize() = maximumSize - currentSize
-    fun size() = readyProcesses.size
-    fun holesSize() = availableHoles.size
-    fun isEmpty() = size() == 1 && readyProcesses.contains(operatingSystemPcb)
-    fun addAll(collection: Collection<Process>, fillRemainingSpace: Boolean = true) {
-        val allAdded = collection.all { add(it) }
-
-        if (fillRemainingSpace && allAdded && !hasReachedMaxSize()) {
-            fillRemainingSpace()
-        }
-    }
-
-
-    fun add(process: Process): Boolean {
-
-        if (process == OS_PCB.process) {
-            return true
-        }
-
-        if (!process.hasSufficientSpace() || hasReachedMaxSize()) {
-            return false
-        }
-
-        if (isEmpty()) {
-            return PCB(process, operatingSystemPcb.limit).addToQueue()
-        }
-
+    private fun handleSuitableHole(process: Process): Boolean {
         val suitableHole = availableHoles.ceiling(Hole.ofSize(process))
 
         if (suitableHole == null) {
@@ -140,7 +113,26 @@ class ReadyQueue(
         Hole(pcb.limit, pcb.limit + leftoverSpace).also { it.addToAvailableHoles() }
 
         return true
+    }
 
+    // PUBLIC FUNCTIONS
+    fun remainingSize() = maximumSize - currentSize
+    fun size() = readyProcesses.size
+    fun holesSize() = availableHoles.size
+    fun isEmpty() = size() == 1 && readyProcesses.contains(operatingSystemPcb)
+    fun addAll(collection: Collection<Process>, fillRemainingSpace: Boolean = true) {
+        val allAdded = collection.all { add(it) }
+
+        if (fillRemainingSpace && allAdded && !hasReachedMaxSize()) {
+            fillRemainingSpace()
+        }
+    }
+
+    fun add(process: Process) = when {
+        process == OS_PCB.process -> true
+        !process.hasSufficientSpace() || hasReachedMaxSize() -> false
+        isEmpty() -> PCB(process, operatingSystemPcb.limit).addToQueue()
+        else -> handleSuitableHole(process)
     }
 
     fun remove() = when {
