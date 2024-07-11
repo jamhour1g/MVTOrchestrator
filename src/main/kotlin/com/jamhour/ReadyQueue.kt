@@ -38,7 +38,7 @@ class ReadyQueue(
     private fun PCB.remove(): PCB {
         assert(this != OS_PCB) { "OS PCB cannot be removed" }
         recentProcesses.remove(this)
-        Hole(base, limit).addToAvailableHoles()
+        Hole(base, limit, this.process.id).addToAvailableHoles()
         currentSize -= process.size
         return this
     }
@@ -82,12 +82,13 @@ class ReadyQueue(
         }
 
         availableHoles.clear()
-        Hole(recentProcesses.last.limit, remainingSize()).addToAvailableHoles()
+        Hole(recentProcesses.last.limit, remainingSize(), "Compacted Hole").addToAvailableHoles()
 
         numOfCompactions++
     }
 
-    private fun fillRemainingSpace() = Hole(recentProcesses.last.limit, remainingSize()).addToAvailableHoles()
+    private fun fillRemainingSpace() =
+        Hole(recentProcesses.last.limit, remainingSize(), "Filling Remaining Space").addToAvailableHoles()
 
     private fun handleSuitableHole(process: Process): Boolean {
         val suitableHole = availableHoles.ceiling(Hole.ofSize(process))
@@ -103,7 +104,11 @@ class ReadyQueue(
                 suitableHole.removeFromHoles()
                 val leftoverSpace = suitableHole.getRemainingSpaceAfter(process)
                 val pcb = PCB(process, suitableHole.base).also { it.addToQueue() }
-                Hole(pcb.limit, pcb.limit + leftoverSpace).also { it.addToAvailableHoles() }
+                Hole(
+                    pcb.limit,
+                    pcb.limit + leftoverSpace,
+                    "Leftover Space after ${process.id}"
+                ).also { it.addToAvailableHoles() }
                 true
             }
         }

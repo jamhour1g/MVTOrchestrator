@@ -10,9 +10,9 @@ package com.jamhour.model
  * @param limit An integer representing the ending address of the hole.
  */
 @JvmRecord
-data class Hole(val base: Int, val limit: Int) : Comparable<Hole> {
+data class Hole(val base: Int, val limit: Int, val nameOfHole: String) : Comparable<Hole> {
 
-    private constructor(size: Int) : this(0, size)
+    private constructor(size: Int) : this(0, size, "of size $size")
 
     fun size() = limit - base
     fun isExactFit(process: Process) = size() == process.size
