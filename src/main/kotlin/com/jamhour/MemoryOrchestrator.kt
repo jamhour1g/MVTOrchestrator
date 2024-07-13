@@ -6,8 +6,8 @@ import java.nio.file.Path
 
 class MemoryOrchestrator private constructor() {
 
-    private val jobQueue = JobQueue()
-    private lateinit var readyProcesses: ReadyQueue
+    val jobQueue = JobQueue()
+    lateinit var readyProcesses: ReadyQueue; private set
 
     private suspend fun readFiles(
         readyFile: Path,
