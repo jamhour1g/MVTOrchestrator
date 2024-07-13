@@ -1,15 +1,19 @@
-package com.jamhour
+package com.jamhour.process_management
 
 import com.jamhour.model.Hole
 import com.jamhour.model.OS_PCB
 import com.jamhour.model.PCB
 import com.jamhour.model.Process
+import java.util.LinkedHashSet
 import java.util.NavigableSet
 import java.util.PriorityQueue
 import java.util.Queue
 import java.util.SequencedSet
 import java.util.TreeSet
-
+import kotlin.collections.all
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.toList
 
 class ReadyQueue(
     private val readyProcesses: Queue<PCB> = PriorityQueue(),

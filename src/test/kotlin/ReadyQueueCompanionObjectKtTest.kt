@@ -1,5 +1,5 @@
-import com.jamhour.ReadyQueue
 import com.jamhour.model.Process
+import com.jamhour.process_management.ReadyQueue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
