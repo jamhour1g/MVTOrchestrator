@@ -48,13 +48,13 @@ class MemoryOrchestrator private constructor() {
         private var readyFile = Path.of("src/test/resources/ready.txt")
         private var jobFile = Path.of("src/test/resources/jobs_correct_format.txt")
 
-        fun readyFilePath(readyFile: Path?) {
+        fun readyFilePath(readyFile: Path?) = apply {
             readyFile?.let {
                 this.readyFile = readyFile
             }
         }
 
-        fun jobFilePath(jobFile: Path?) {
+        fun jobFilePath(jobFile: Path?) = apply {
             jobFile?.let {
                 this.jobFile = jobFile
             }
