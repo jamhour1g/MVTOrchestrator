@@ -1,6 +1,6 @@
-import com.jamhour.linePattern
 import com.jamhour.model.Process
-import com.jamhour.readFile
+import com.jamhour.util.linePattern
+import com.jamhour.util.readFile
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName

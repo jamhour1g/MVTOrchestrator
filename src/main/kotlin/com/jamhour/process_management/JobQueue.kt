@@ -1,4 +1,4 @@
-package com.jamhour
+package com.jamhour.process_management
 
 import com.jamhour.model.Process
 import java.util.ArrayDeque

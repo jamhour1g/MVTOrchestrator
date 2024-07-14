@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import atlantafx.base.controls.Tile?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jamhour.ui.controllers.SettingsController">
+    <Tile fx:id="themeTile" description="Customize application appearance: change themes" prefWidth="500.0" title="Theme" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </VBox.margin>
+    </Tile>
+    <Tile fx:id="logsTile" description="Show logs for code each performed step" layoutX="35.0" layoutY="35.0" prefWidth="500.0" title="Logs" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </VBox.margin>
+    </Tile>
+</VBox>
