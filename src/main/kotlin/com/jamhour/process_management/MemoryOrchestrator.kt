@@ -1,11 +1,15 @@
 package com.jamhour.process_management
 
+import com.jamhour.util.Defaults
 import com.jamhour.util.readFile
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.nio.file.Path
 
-class MemoryOrchestrator private constructor() {
+class MemoryOrchestrator private constructor(
+    val readyFilePath: Path,
+    val jobFilePath: Path,
+) {
 
     val jobQueue = JobQueue()
     lateinit var readyProcesses: ReadyQueue; private set
@@ -28,8 +32,6 @@ class MemoryOrchestrator private constructor() {
         jobQueueJobs.await().also { jobQueue.addAll(it) }
     }
 
-    fun isEmpty() = readyProcesses.isEmpty() && jobQueue.isEmpty()
-
     fun removeScheduling(): Boolean {
         val removed = readyProcesses.remove()
         removed?.let {
@@ -46,8 +48,8 @@ class MemoryOrchestrator private constructor() {
 
     class Builder {
 
-        private var readyFile = Path.of("src/test/resources/ready.txt")
-        private var jobFile = Path.of("src/test/resources/jobs_correct_format.txt")
+        private var readyFile = Defaults.readyFilePath
+        private var jobFile = Defaults.jobFilePath
 
         fun readyFilePath(readyFile: Path?) = apply {
             readyFile?.let {
@@ -62,7 +64,7 @@ class MemoryOrchestrator private constructor() {
         }
 
         suspend fun build(): MemoryOrchestrator {
-            return MemoryOrchestrator().apply {
+            return MemoryOrchestrator(readyFile, jobFile).apply {
                 readFiles(readyFile, jobFile)
             }
         }
