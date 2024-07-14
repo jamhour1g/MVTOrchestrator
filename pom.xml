@@ -14,7 +14,7 @@
         <kotlin.version>2.0.0</kotlin.version>
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
         <kotlin.compiler.jvmSource>21</kotlin.compiler.jvmSource>
-        <kotlin.MainClass>MainKt</kotlin.MainClass>
+        <kotlin.MainClass>com.jamhour.ui.ApplicationLauncher</kotlin.MainClass>
         <kotlin.coroutines.version>1.9.0-RC</kotlin.coroutines.version>
         <javafx.version>23-ea+22</javafx.version>
     </properties>
@@ -95,6 +95,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${kotlin.compiler.jvmSource}</source>
                     <target>${kotlin.compiler.jvmTarget}</target>
@@ -135,7 +136,13 @@
 
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
-            <artifactId>kotlinx-coroutines-core</artifactId>
+            <artifactId>kotlinx-coroutines-core-jvm</artifactId>
+            <version>${kotlin.coroutines.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-javafx</artifactId>
             <version>${kotlin.coroutines.version}</version>
         </dependency>
 
@@ -150,7 +157,7 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>io.github.mkpaz</groupId>
             <artifactId>atlantafx-base</artifactId>
