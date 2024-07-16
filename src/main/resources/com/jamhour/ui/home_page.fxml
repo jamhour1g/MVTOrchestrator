@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import atlantafx.base.controls.Tile?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -7,17 +8,50 @@
             fx:controller="com.jamhour.ui.controllers.HomePageController">
     <center>
         <SplitPane dividerPositions="0.33, 0.66" prefHeight="660.0" prefWidth="1220.0">
-            <ListView fx:id="jobQueueListView"/>
-            <ListView fx:id="readyQueueListView"/>
-            <ListView fx:id="availableHolesListView"/>
+            <VBox spacing="10.0">
+                <Accordion>
+                    <panes>
+                        <TitledPane expanded="false" text="Job queue">
+                            <Tile description="The Job Queue is a critical component designed to manage and organize processes within the system. It serves as a staging area where jobs are queued before they are executed by the processor."
+                                  title="Job Queue Overview"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <ListView fx:id="jobQueueListView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+            <VBox spacing="10.0">
+                <Accordion>
+                    <panes>
+                        <TitledPane expanded="false" text="Ready queue">
+                            <Tile description="The Ready Queue is a crucial component designed to manage the scheduling and execution of processes within a system. It ensures that processes are organized and executed efficiently, maintaining optimal performance and resource utilization."
+                                  title="Ready Queue Overview"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <ListView fx:id="readyQueueListView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+            <VBox spacing="10.0">
+                <Accordion>
+                    <panes>
+                        <TitledPane expanded="false" text="Holes">
+                            <Tile description="The holes list manages a collection of holes to efficiently handle memory allocation and deallocation for processes. A hole represents a block of available memory that can be assigned to a process."
+                                  title="Holes List Overview"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <ListView fx:id="availableHolesListView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
         </SplitPane>
     </center>
     <bottom>
         <BorderPane BorderPane.alignment="CENTER">
             <left>
                 <HBox alignment="TOP_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
-                    <Button alignment="CENTER" mnemonicParsing="false"
-                            onAction="#onChooseFileClicked" text="Choose files"/>
+                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#onChooseFileClicked"
+                            text="Choose files"/>
                     <BorderPane.margin>
                         <Insets/>
                     </BorderPane.margin>
@@ -31,8 +65,8 @@
                     <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                     </padding>
-                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#onRemoveClicked"
-                            text="Remove" defaultButton="true"/>
+                    <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#onRemoveClicked"
+                            text="Remove"/>
                 </HBox>
             </center>
             <right>
@@ -43,10 +77,12 @@
                     <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                     </padding>
-                    <Button alignment="CENTER" mnemonicParsing="false"
-                            onAction="#onSettingsClicked" text="Settings"/>
+                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#onSettingsClicked" text="Settings"/>
                 </HBox>
             </right>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0"/>
+            </padding>
         </BorderPane>
     </bottom>
 </BorderPane>
