@@ -17,9 +17,12 @@ class ApplicationLauncher : Application() {
     override fun start(primaryStage: Stage) {
 
         val homePage = FXMLLoader.load<BorderPane>(javaClass.getResource(HOME_PAGE_PATH))
-        primaryStage.title = DEFAULT_TITLE
-        primaryStage.scene = Scene(homePage)
-        primaryStage.show()
+        primaryStage.apply {
+            title = DEFAULT_TITLE
+            scene = Scene(homePage)
+            centerOnScreen()
+            show()
+        }
 
         setUserAgentStylesheet(loadStoredParams().settings.theme.theme.userAgentStylesheet)
     }
