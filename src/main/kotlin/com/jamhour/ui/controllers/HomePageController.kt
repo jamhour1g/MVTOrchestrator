@@ -6,7 +6,6 @@ import com.jamhour.model.Process
 import com.jamhour.process_management.MemoryOrchestrator
 import com.jamhour.util.Defaults.CHOOSE_FILE_PATH
 import com.jamhour.util.Defaults.SETTINGS_PATH
-import com.jamhour.util.FilesParam
 import com.jamhour.util.Params
 import com.jamhour.util.saveParams
 import javafx.collections.FXCollections
@@ -105,14 +104,9 @@ class HomePageController : CoroutineScope {
         showAndWait().ifPresent {
             if (it == ButtonType.OK) {
                 val settingsController = loader.getController<SettingsController>()
-                saveParams(Params(settingsController.saveSettings(), saveFileSettings()))
+                saveParams(Params(settingsController.saveSettings()))
             }
         }
     }
-
-    fun saveFileSettings() = FilesParam(
-        memoryOrchestrator.readyFilePath,
-        memoryOrchestrator.jobFilePath
-    )
 
 }
