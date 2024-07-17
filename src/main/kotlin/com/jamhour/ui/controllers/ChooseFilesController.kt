@@ -1,7 +1,10 @@
 package com.jamhour.ui.controllers
 
+import com.jamhour.util.Defaults.CHOOSE_FILE_PATH
+import com.jamhour.util.createView
 import javafx.fxml.FXML
 import javafx.scene.control.TextArea
+import javafx.scene.layout.GridPane
 import javafx.stage.FileChooser
 import java.nio.file.Path
 
@@ -32,5 +35,10 @@ class ChooseFilesController {
     }
 
     fun areContentsValid() = readyFilePath != null && jobFilePath != null
+
+    companion object {
+        fun loadChooseFilesView() =
+            createView<GridPane, ChooseFilesController>(javaClass.getResource(CHOOSE_FILE_PATH)!!)
+    }
 
 }
