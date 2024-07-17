@@ -1,13 +1,16 @@
 package com.jamhour.ui.controllers
 
 import atlantafx.base.controls.Tile
+import com.jamhour.util.Defaults.SETTINGS_PATH
 import com.jamhour.util.Defaults.defaultTheme
 import com.jamhour.util.SettingsParam
 import com.jamhour.util.Theme
+import com.jamhour.util.createView
 import com.jamhour.util.loadStoredParams
 import javafx.application.Application.setUserAgentStylesheet
 import javafx.fxml.FXML
 import javafx.scene.control.ComboBox
+import javafx.scene.layout.VBox
 
 class SettingsController {
 
@@ -35,5 +38,9 @@ class SettingsController {
     }
 
     fun saveSettings() = SettingsParam(themesComboBox.value)
+
+    companion object {
+        fun loadSettingsView() = createView<VBox, SettingsController>(javaClass.getResource(SETTINGS_PATH)!!)
+    }
 
 }
