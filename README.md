@@ -63,7 +63,3 @@ These features are in progress and will be implemented in future updates. Stay t
 - `src/test/resources/ready.txt` - Input file for initial ready queue
 - `src/test/resources/jobs_correct_format.txt` - Input file for job queue
 - `README.md` - This file
-
-## Contributing
-
-This is an academic project and is not open for contributions. However, feedback and suggestions are welcome.
